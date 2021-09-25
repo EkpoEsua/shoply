@@ -30,7 +30,7 @@ Requires `Python3 => v3.8.10` | `git`
 
 * Install app dependencies. 
         
-        pip install requirements.txt
+        pip install -r requirements.txt
 
 * Run database setup. 
     
@@ -56,4 +56,4 @@ Requires `Python3 => v3.8.10` | `git`
 
         python manage.py createsuperuser
 
-* Login with credentials on [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+* Start app and login with credentials on [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
