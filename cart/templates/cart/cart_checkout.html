@@ -1,0 +1,21 @@
+{% extends "cart/cart.html" %}
+
+{% block content %}
+<form action="" method="post">
+    <div>
+    {% csrf_token %}
+    {{ form.management_form }}
+    {% for form in form %}
+        {{ form.as_p }}
+        <!-- <div> -->
+        <a href="{% url 'update-cart-item' form.id.value %}">Update Item</a>
+        <a href="{% url 'delete-cart-item' form.id.value %}" class="right">Remove Item</a>
+        <!-- </div> -->
+        <hr>
+    {% endfor %}
+    <!-- <div> -->
+    <input class="right" type="submit" value="Buy">
+    <a href="{% url 'create-cart-item' %}">Add New Item</a>
+    </div>
+</form>
+{% endblock %}

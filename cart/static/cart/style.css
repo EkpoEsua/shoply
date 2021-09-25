@@ -1,0 +1,38 @@
+body div {
+    margin: auto;
+    width: 40em;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    padding-bottom: 1em;
+    padding-top: 0.5em;
+}
+
+body{
+    background-color: rgb(234, 234, 245);
+}
+
+/* body div form{
+    margin: auto;
+    width: 40em;
+} */
+
+body div h2{
+    text-align: center;
+}
+
+#b1{
+    text-align: center;
+    display: block;
+}
+
+.right{
+    float: right;
+}
+
+body div div{
+    margin: auto;
+    width: 25em;
+    padding: 10px;
+}
+
+

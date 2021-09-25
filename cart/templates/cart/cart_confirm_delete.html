@@ -1,0 +1,17 @@
+{% extends "cart/cart.html" %}
+
+{% block content %}
+<div>
+<h1>Remove Item</h1>
+
+<p>Remove <em> {{ cart.product }} </em> from the Cart?.</p>
+</div>
+<form action="" method="post">
+    {% csrf_token %}
+    <div>
+        <input type="submit" value="Yes, Remove" class="right">
+        <a href="{% url 'cart-list' %}" >Cancel</a>
+    </div>
+</form>
+
+{% endblock %}
