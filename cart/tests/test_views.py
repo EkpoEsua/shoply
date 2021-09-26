@@ -1,3 +1,4 @@
+""" Test Classes for the View Classes and functionality."""
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import response
 from cart.models import Cart, Product
@@ -24,7 +25,7 @@ class CartCheckOutViewTest(BaseViewClassTest):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(url, "/cart/")
-        self.assertTemplateUsed(response, 'cart/cart_checkout.html')
+        self.assertTemplateUsed(response, "cart/cart_checkout.html")
 
     def test_checkout_of_cart_items(self):
         """Test that items are checked out and cart is empty afterwards"""
@@ -37,17 +38,16 @@ class CartCheckOutViewTest(BaseViewClassTest):
         form = response.context["form"]
         # Check total forms returned is equal to number of items in the cart
         self.assertEqual(form.total_form_count(), cart.count())
-        
 
         # Submit the form to check out the cart
         data = {
-            'form-TOTAL_FORMS': ['3'], 
-            'form-INITIAL_FORMS': ['3'], 
-            'form-MIN_NUM_FORMS': ['0'], 
-            'form-MAX_NUM_FORMS': ['1000'], 
-            'form-0-id': 1, 
-            'form-1-id': 2, 
-            'form-2-id': 3
+            "form-TOTAL_FORMS": ["3"],
+            "form-INITIAL_FORMS": ["3"],
+            "form-MIN_NUM_FORMS": ["0"],
+            "form-MAX_NUM_FORMS": ["1000"],
+            "form-0-id": 1,
+            "form-1-id": 2,
+            "form-2-id": 3,
         }
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
@@ -61,7 +61,17 @@ class CartCheckOutViewTest(BaseViewClassTest):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(url, "/cart/success")
-        self.assertTemplateUsed(response, 'cart/checkout_success.html')
+        self.assertTemplateUsed(response, "cart/checkout_success.html")
+
+    def test_computation_of_total_cost_and_quantity_of_items_in_the_cart(self):
+        """Test for correct computation of the total quantity and total cost of items in
+        the cart.
+        """
+        url = reverse("cart-list")
+        response = self.client.get(url)
+        context = response.context
+        self.assertEqual(context["total_quantity"], 4)
+        self.assertEqual(context["total_cost"], 16)
 
 
 class CartItemCreateViewTest(BaseViewClassTest):
@@ -73,7 +83,7 @@ class CartItemCreateViewTest(BaseViewClassTest):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(url, "/cart/item/create/")
-        self.assertTemplateUsed(response, 'cart/cart_add_new_item.html')
+        self.assertTemplateUsed(response, "cart/cart_add_new_item.html")
 
     def test_creation_of_a_new_cart_item(self):
         """Test creation of a new cart item"""
@@ -106,15 +116,17 @@ class CartItemCreateViewTest(BaseViewClassTest):
         self.assertEqual(cart.purchase_quantity, 3)
         self.assertEqual(cart.price_per_kg, product.price_per_kg)
 
+
 class CartItemUpdateViewTest(BaseViewClassTest):
     """Test case for the CartItemUpdateView."""
+
     def test_accessability_of_view(self):
         """Test the view to ensure reachability via the name, url, and correct template is used."""
         url = reverse("update-cart-item", args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(url, "/cart/item/update/1")
-        self.assertTemplateUsed(response, 'cart/cart_form.html')
+        self.assertTemplateUsed(response, "cart/cart_form.html")
 
     def test_update_to_an_item_in_cart(self):
         """Test update to specified item in cart, creating the update and redirecting."""
@@ -134,17 +146,17 @@ class CartItemUpdateViewTest(BaseViewClassTest):
         self.assertEqual(form.initial["purchase_quantity"], initial_purchase_quantity)
         self.assertEqual(form.initial["price_per_kg"], initial_price_per_kg)
 
-        #Make post request and test for an update
+        # Make post request and test for an update
         data = {
             "product": initial_item,
             "purchase_quantity": desired_purchase_quantity,
-            "price_per_kg": initial_price_per_kg
+            "price_per_kg": initial_price_per_kg,
         }
         response = self.client.post(url, data=data)
         self.assertTrue(response.status_code, 302)
         self.assertRedirects(response, reverse("cart-list"))
 
-        #Test for the upddate
+        # Test for the upddate
         cart = Cart.objects.get(pk=object_pk)
         self.assertEqual(cart.product_id, initial_item)
         self.assertEqual(cart.purchase_quantity, desired_purchase_quantity)
@@ -160,7 +172,7 @@ class CartItemDeleteViewTest(BaseViewClassTest):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(url, "/cart/item/delete/1")
-        self.assertTemplateUsed(response, 'cart/cart_confirm_delete.html')
+        self.assertTemplateUsed(response, "cart/cart_confirm_delete.html")
 
     def test_that_the_view_deletes_specified_object_in_correct_sequence(self):
         """Test objection deletion from the database, redirects back to the /cart page."""
@@ -174,4 +186,3 @@ class CartItemDeleteViewTest(BaseViewClassTest):
 
         with self.assertRaises(ObjectDoesNotExist):
             Cart.objects.get(pk=object_pk)
-

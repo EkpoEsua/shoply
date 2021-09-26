@@ -22,7 +22,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("cart/", include("cart.urls")),
     path("", RedirectView.as_view(url="cart/")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

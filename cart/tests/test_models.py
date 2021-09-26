@@ -1,4 +1,4 @@
-from django.core.checks import messages
+"""Test Classes for Model Classes and functionalities."""
 from django.test import TestCase
 from cart.models import Product, Cart
 from django.core.exceptions import ValidationError
@@ -17,7 +17,7 @@ class BaseModelTest(TestCase):
 
 class DatabaseInitializationTest(BaseModelTest):
     """Check that the database has been initialized with the expected records."""
-    
+
     def test_that_potatoes_is_in_the_database(self):
         """Test that potatoes is the database with expect record."""
         potatoes = Product.objects.get(name="Potatoes")
@@ -80,7 +80,9 @@ class ProductModelTest(BaseModelTest):
         label = product._meta.get_field("price_per_kg").verbose_name
         self.assertEqual(label, "Price (per kg in AED)")
 
-    def test_the_price_per_kg_and_quantity_available_fields_should_not_be_below_zero(self):
+    def test_the_price_per_kg_and_quantity_available_fields_should_not_be_below_zero(
+        self,
+    ):
         """Test the value of the  price per kg field maintains the constrain of never being
         less than zero.
         """
@@ -93,8 +95,8 @@ class ProductModelTest(BaseModelTest):
         e = cm.exception
         message = e.message_dict
         expected_dict = {
-            "quantity_available": ["Ensure this value is greater than or equal to 0."], 
-            "price_per_kg": ["Ensure this value is greater than or equal to 0."]
+            "quantity_available": ["Ensure this value is greater than or equal to 0."],
+            "price_per_kg": ["Ensure this value is greater than or equal to 0."],
         }
         self.assertDictEqual(message, expected_dict)
 
@@ -107,7 +109,7 @@ class ProductModelTest(BaseModelTest):
             self.assertEqual(id_count, product.id)
             id_count += 1
 
-    
+
 class CartModelTest(BaseModelTest):
     """Class to define test cases for Cart model."""
 
@@ -119,9 +121,11 @@ class CartModelTest(BaseModelTest):
         for item in cart_items:
             self.assertEqual(id_count, item.id)
             id_count += 1
-    
-    def test_the_price_per_kg_and_purchase_quantity_fields_should_not_be_below_zero(self):
-        """Test the value of the  price per kg and purchase_quantity fields maintains the 
+
+    def test_the_price_per_kg_and_purchase_quantity_fields_should_not_be_below_zero(
+        self,
+    ):
+        """Test the value of the  price per kg and purchase_quantity fields maintains the
         constrain of never being less than zero.
         """
         product = Product(name="name", quantity_available=2, price_per_kg=-1)
@@ -134,14 +138,14 @@ class CartModelTest(BaseModelTest):
         e = cm.exception
         message = e.message_dict
         expected_dict = {
-            "purchase_quantity": ["Ensure this value is greater than or equal to 0."], 
-            "price_per_kg": ["Ensure this value is greater than or equal to 0."]
+            "purchase_quantity": ["Ensure this value is greater than or equal to 0."],
+            "price_per_kg": ["Ensure this value is greater than or equal to 0."],
         }
         self.assertDictEqual(message, expected_dict)
 
     def test_the_price_per_kg_is_same_as_that_of_the_product(self):
-        """Test that the value of the price per kg field of a cart item must be equal to the 
-        corresponding product's value. 
+        """Test that the value of the price per kg field of a cart item must be equal to the
+        corresponding product's value.
         """
         product = Product(name="name", quantity_available=2, price_per_kg=5)
         product.save()
@@ -158,7 +162,3 @@ class CartModelTest(BaseModelTest):
             ]
         }
         self.assertDictEqual(message, expected_dict)
-
-    
-
-

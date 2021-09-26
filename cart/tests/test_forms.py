@@ -1,3 +1,4 @@
+"""Test Classes for the Form Classes and funcitonalities."""
 from logging import error
 from cart.models import Cart, Product
 from django.test import TestCase
@@ -17,8 +18,10 @@ class BaseFormTest(TestCase):
 
     def label_test(self, form, field, expected_value):
         """Generic label test function"""
-        self.assertTrue(form.fields[field].label is None 
-                        or form.fields[field].label == expected_value)
+        self.assertTrue(
+            form.fields[field].label is None
+            or form.fields[field].label == expected_value
+        )
 
     def model_field_choice_test(self, form, field, query):
         """Generic test for Model Choice Fields."""
@@ -26,6 +29,7 @@ class BaseFormTest(TestCase):
         products_list = products.values_list()
         choices = form.fields[field].queryset.values_list()
         self.assertEqual(list(products_list), list(choices))
+
 
 class CreateItemFormTest(BaseFormTest):
     """Tests for CreateItemForm."""
@@ -41,7 +45,7 @@ class CreateItemFormTest(BaseFormTest):
     def test_purchase_quantity_field_label(self):
         form = CreateItemForm()
         self.label_test(form, "purchase_quantity", "Purchase quantity")
-    
+
     def test_price_per_kg_field_is_hidden(self):
         form = CreateItemForm()
         self.assertTrue(form.fields["price_per_kg"].hidden_widget)
@@ -85,7 +89,9 @@ class CreateItemFormTest(BaseFormTest):
             "purchase_quantity": 4,
         }
         form = CreateItemForm(data=data)
-        self.assertTrue("Cart with this Product already exists." in form.errors["product"])
+        self.assertTrue(
+            "Cart with this Product already exists." in form.errors["product"]
+        )
         self.assertFalse(form.is_valid())
         self.assertTrue("Item already in Cart." in form.errors["product"])
         with self.assertRaises(ValueError):
@@ -134,7 +140,7 @@ class CheckOutFormTest(BaseFormTest):
         self.label_test(form, "purchase_quantity", "Quantity (kg)")
 
     def test_item_check_out(self):
-        """Test that an item is checked out proper, with appropraite update to the Product 
+        """Test that an item is checked out proper, with appropraite update to the Product
         database, reducing the available quantity and Cart database, removing the item.
         """
         cart = Cart.objects.get(pk=1)
@@ -149,9 +155,9 @@ class CheckOutFormTest(BaseFormTest):
         update_form.save()
 
         data = {
-            "product":product_id,
+            "product": product_id,
             "purchase_quantity": purchase_quantity,
-            "price_per_kg": cart.price_per_kg
+            "price_per_kg": cart.price_per_kg,
         }
 
         check_out_form = CheckOutForm(data=data, instance=cart)
@@ -163,7 +169,6 @@ class CheckOutFormTest(BaseFormTest):
         with self.assertRaises(ObjectDoesNotExist) as cm:
             cart = Cart.objects.get(pk=1)
 
-            
     def test_purchase_quantity_more_than_available_quantity(self):
         """Test for an invalid form and corresponding error message when the purchase quantity
         of the item is more than the product's available quantity.
@@ -180,9 +185,9 @@ class CheckOutFormTest(BaseFormTest):
         update_form.save()
 
         data = {
-            "product":product_id,
+            "product": product_id,
             "purchase_quantity": purchase_quantity,
-            "price_per_kg": product.price_per_kg
+            "price_per_kg": product.price_per_kg,
         }
 
         # try checking out item
@@ -190,6 +195,3 @@ class CheckOutFormTest(BaseFormTest):
         self.assertFalse(checkout_form.is_valid())
         error_message = f"We only have {available_quantity}kg of {product.name} left."
         self.assertTrue(error_message, checkout_form.errors.get("purchase_quantity"))
-
-    
-

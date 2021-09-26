@@ -9,32 +9,79 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Product Name', max_length=200, unique=True, verbose_name='Product Name')),
-                ('quantity_available', models.IntegerField(help_text='Quantity (kg)', validators=[django.core.validators.MinValueValidator(0)], verbose_name='Quantity (kg)')),
-                ('price_per_kg', models.IntegerField(help_text='Price (per kg in AED)', validators=[django.core.validators.MinValueValidator(0)], verbose_name='Price (per kg in AED)')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="Product Name",
+                        max_length=200,
+                        unique=True,
+                        verbose_name="Product Name",
+                    ),
+                ),
+                (
+                    "quantity_available",
+                    models.IntegerField(
+                        help_text="Quantity (kg)",
+                        validators=[django.core.validators.MinValueValidator(0)],
+                        verbose_name="Quantity (kg)",
+                    ),
+                ),
+                (
+                    "price_per_kg",
+                    models.IntegerField(
+                        help_text="Price (per kg in AED)",
+                        validators=[django.core.validators.MinValueValidator(0)],
+                        verbose_name="Price (per kg in AED)",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['id'],
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Cart',
+            name="Cart",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('purchase_quantity', models.IntegerField(validators=[django.core.validators.MinValueValidator(0)])),
-                ('price_per_kg', models.IntegerField()),
-                ('product', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='cart.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "purchase_quantity",
+                    models.IntegerField(
+                        validators=[django.core.validators.MinValueValidator(0)]
+                    ),
+                ),
+                ("price_per_kg", models.IntegerField()),
+                (
+                    "product",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE, to="cart.product"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['id'],
+                "ordering": ["id"],
             },
         ),
     ]
